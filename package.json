@@ -1,0 +1,13 @@
+{
+  "name": "deepseek-desktop-app",
+  "version": "1.0.0",
+  "scripts": {
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build",
+    "tauri": "tauri"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.2.7"
+  }
+}
