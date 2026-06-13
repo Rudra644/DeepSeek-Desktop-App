@@ -7,7 +7,7 @@ fn main() {
         .setup(|app| {
             if let Some(window) = app.get_webview_window("main") {
                 window
-                    .eval(r#"window.location.href = "https://chat.deepseek.com/";"#)
+                    .eval(r#"window.location.href = "file://../main/index.html";"#)
                     .unwrap();
             }
             Ok(())
