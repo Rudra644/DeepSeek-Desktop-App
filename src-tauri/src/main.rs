@@ -1,17 +1,9 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use tauri::{Manager};
+use tauri::Builder;
 
 fn main() {
-    tauri::Builder::default()
-        .setup(|app| {
-            if let Some(window) = app.get_webview_window("main") {
-                window
-                    .eval(r#"window.location.href = "file://../main/index.html";"#)
-                    .unwrap();
-            }
-            Ok(())
-        })
+    Builder::default()
         .run(tauri::generate_context!())
         .expect("error while running Tauri application");
 }

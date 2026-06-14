@@ -1,4 +1,4 @@
-use tauri::{Builder, State, AppHandle};
+use tauri::{Builder, State, AppHandle, Manager};
 use tauri_plugin_notification::NotificationExt;
 use serde::{Serialize, Deserialize};
 use std::sync::{Arc, Mutex};
@@ -17,15 +17,15 @@ impl Default for ThemeState {
 }
 
 #[tauri::command]
-fn toggle_theme(app: State<ThemeState>) -> String {
-    let state = app.inner().lock().unwrap();
-    let new_theme = if state.current_theme == "dark" {
+fn toggle_theme(app: State<Arc<Mutex<ThemeState>>>) -> String {
+    let mut state = app.lock().unwrap();
+    let current = state.current_theme.clone();
+    let new_theme = if current == "dark" {
         "light"
     } else {
         "dark"
     }.to_string();
     
-    let mut state = app.inner().lock().unwrap();
     state.current_theme = new_theme.clone();
     new_theme
 }
@@ -33,7 +33,7 @@ fn toggle_theme(app: State<ThemeState>) -> String {
 #[tauri::command]
 fn send_notification(title: &str, body: &str, app: AppHandle) -> Result<(), String> {
     app.notification()
-        .builder(&app.config().app.name.clone().unwrap_or_else(|| "App".to_string()))
+        .builder()
         .title(title)
         .body(body)
         .show()
@@ -41,8 +41,8 @@ fn send_notification(title: &str, body: &str, app: AppHandle) -> Result<(), Stri
 }
 
 #[tauri::command]
-fn get_theme(app: State<ThemeState>) -> String {
-    let state = app.inner().lock().unwrap();
+fn get_theme(app: State<Arc<Mutex<ThemeState>>>) -> String {
+    let state = app.lock().unwrap();
     state.current_theme.clone()
 }
 
